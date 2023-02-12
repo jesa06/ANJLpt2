@@ -29,16 +29,22 @@ class UserAPI:
             # look for password and dob
             password = body.get('password')
             dob = body.get('dob')
+            phone = body.get('phone')
+            email = body.get('email')
 
             ''' #1: Key code block, setup USER OBJECT '''
             uo = User(name=name, 
                       uid=uid)
-            
+            uo.phone = phone
+            uo.email = email
+
             ''' Additional garbage error checking '''
             # set password if provided
             if password is not None:
-                uo.set_password(password)
+                uo.password = password
+    
             # convert to date type
+        
             if dob is not None:
                 try:
                     uo.dob = datetime.strptime(dob, '%Y-%m-%d').date()
@@ -71,13 +77,14 @@ class UserAPI:
             if uid is None or len(uid) < 2:
                 return {'message': f'User ID is missing, or is less than 2 characters'}, 400
             password = body.get('password')
+
             
             ''' Find user '''
             user = User.query.filter_by(_uid=uid).first()
             if user is None or not user.is_password(password):
                 return {'message': f"Invalid user id or password"}, 400
             
-            ''' authenticated user '''
+            ''' authenticated user ''' 
             return jsonify(user.read())
 
             
