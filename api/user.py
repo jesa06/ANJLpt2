@@ -37,11 +37,13 @@ class UserAPI:
                       uid=uid)
             uo.phone = phone
             uo.email = email
+            uo.password = password
+            uo.dob = dob
 
             ''' Additional garbage error checking '''
             # set password if provided
-            if password is not None:
-                uo.password = password
+          #   if password is not None:
+             #   uo.password = password
     
             # convert to date type
         
