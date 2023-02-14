@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource # used for REST API building
-from datetime import datetime
 
 activity_api = Blueprint('activity_api', __name__,
                    url_prefix='/api/activities')
@@ -19,18 +18,17 @@ class ActivityApi:
             name = body.get('name')
             if name is None or len(name) < 2:
                 return {'message': f'Name is missing, or is less than 2 characters'}, 210
-            # validate uid
-            uid = body.get('uid')
-            if uid is None or len(uid) < 2:
-                return {'message': f'User ID is missing, or is less than 2 characters'}, 210
-            # look for password and dob
-            password = body.get('password')
-            dob = body.get('dob')
-            classOf = body.get('classOf')
+            # validate hobby
+            hobby = body.get('hobby')
+            # validate price
+            price = body.get('price')
+            # validate duration
+            duration = body.get('duration')
+            
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = User(name=name, 
-                      uid=uid)
+            uo = Activity(activity=activity, 
+                      hobby=ui)
             
             ''' Additional garbage error checking '''
             uo.classOf = classOf
