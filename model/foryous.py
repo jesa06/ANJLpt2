@@ -56,9 +56,21 @@ def duration(activity, duration):
 if __name__ == "__main__":
     
     #define activity objevts
-    a1 = Activity(name='SeaWorld', hobby='Amusement Park', price= "$109-$200", duration= 'all-day')
+    a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day')
+    a2 = Activity(name='Balboa Park', hobby='', price='', duration='')
+    a3 = Activity(name='Del Mar Beach', hobby='', price='', duration='')
+    a4 = Activity(name='La Jolla Beach', hobby='', price='', duration='')
+    a5 = Activity(name='Hotel Del', hobby='', price='', duration='')
+    a6 = Activity(name='', hobby='', price='', duration='')
+    a7 = Activity(name='', hobby='', price='', duration='')
+    a9 = Activity(name='', hobby='', price='', duration='')
+    a10 = Activity(name='', hobby='', price='', duration='')
+    a11 = Activity(name='', hobby='', price='', duration='')
+    a12 = Activity(name='', hobby='', price='', duration='')
+    a13 = Activity(name='', hobby='', price='', duration='')
+    
 
 # pur user objects in list for convenience
-activities = [a1]
+activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
 
 print(str(activity))
