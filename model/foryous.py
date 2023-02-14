@@ -56,7 +56,7 @@ def duration(activity, duration):
 if __name__ == "__main__":
     
     #define activity objevts
-    a1 = Activity(name='SeaWorld', hobby='Amusement Park', price= '$100-$200', duration= 'all-day')
+    a1 = Activity(name='SeaWorld', hobby='Amusement Park', price= "$109-$200", duration= 'all-day')
 
 # pur user objects in list for convenience
 activities = [a1]
