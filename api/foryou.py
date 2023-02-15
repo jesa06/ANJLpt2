@@ -9,7 +9,7 @@ api = Api(activity_api)
 
 class ActivityApi:        
     class _Create(Resource):
-        def post(activity):
+        def post(self):
             ''' Read data for json body '''
             body = request.get_json()
             
@@ -27,7 +27,7 @@ class ActivityApi:
             
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = Activity(activity=name)
+            uo = Activity(self=name)
             
             ''' Additional garbage error checking '''
             uo.hobby = hobby
@@ -46,8 +46,8 @@ class ActivityApi:
             return {'message': f'Processed {name}, either a format error or Activity {name} is duplicate'}, 210
 
     class _Read(Resource):
-        def get(activity):
-            activities = activity.query.all()    # read/extract all users from database
+        def get(self):
+            activities = self.query.all()    # read/extract all users from database
             json_ready = [activity_api.read() for activity in activities]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
 
