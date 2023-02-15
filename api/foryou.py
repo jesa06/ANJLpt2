@@ -27,8 +27,8 @@ class ActivityApi:
             
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = Activity(activity=activity, 
-                      hobby=ui)
+            uo = User(name=name, 
+                      uid=uid)
             
             ''' Additional garbage error checking '''
             uo.classOf = classOf
@@ -54,7 +54,7 @@ class ActivityApi:
     class _Read(Resource):
         def get(activity):
             activities = Activity.query.all()    # read/extract all users from database
-            json_ready = [user.read() for user in users]  # prepare output in json
+            json_ready = [activity_api.read() for user in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
 
     # building RESTapi endpoint
