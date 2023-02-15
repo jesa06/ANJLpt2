@@ -73,4 +73,10 @@ if __name__ == "__main__":
 # pur user objects in list for convenience
 activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
 
-print(str(activity))
+print("Test 3, make a dictionary")
+json_string = json.dumps([user.__dict__ for user in users]) 
+print(json_string)
+
+print("Test 4, make a dictionary")
+json_string = json.dumps([vars(user) for user in users]) 
+print(json_string)
