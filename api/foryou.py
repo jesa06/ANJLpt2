@@ -27,20 +27,14 @@ class ActivityApi:
             
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = User(name=name, 
-                      uid=uid)
+            uo = Activity(activity=name)
             
             ''' Additional garbage error checking '''
-            uo.classOf = classOf
+            uo.hobby = hobby
             # set password if provided
-            if password is not None:
-                uo.password = password
+            uo.price = price
             # convert to date type
-            if dob is not None:
-                try:
-                    uo.dob = datetime.strptime(dob, '%m-%d-%Y').date()
-                except:
-                    return {'message': f'Date of birth format error {dob}, must be mm-dd-yyyy'}, 210
+            uo.duration = duration
             
             ''' #2: Key Code block to add user to database '''
             # create user in database
@@ -49,12 +43,12 @@ class ActivityApi:
             if user:
                 return jsonify(user.read())
             # failure returns error
-            return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 210
+            return {'message': f'Processed {name}, either a format error or Activity {name} is duplicate'}, 210
 
     class _Read(Resource):
         def get(activity):
-            activities = Activity.query.all()    # read/extract all users from database
-            json_ready = [activity_api.read() for user in users]  # prepare output in json
+            activities = activity.query.all()    # read/extract all users from database
+            json_ready = [activity_api.read() for activity in activities]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
 
     # building RESTapi endpoint
