@@ -192,8 +192,7 @@ class User(db.Model):
             "email": self.email,
             "dob": self.dob,
             "age": self.age,
-        }
-
+        }  
 
 
     # CRUD update: updates user name, password, phone

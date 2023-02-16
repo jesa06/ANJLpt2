@@ -10,7 +10,7 @@ class Post(db.Model):
     __tablename__ = 'posts'
 
     # Define the Notes schema
-    id = db.Column(db.Integer, primary_key=True)
+
     note = db.Column(db.Text, unique=False, nullable=False)
     image = db.Column(db.String, unique=False)
         
@@ -136,7 +136,7 @@ class Activity:
 def initUsers():
     with app.app_context():
         """Create database and tables"""
-        db.init_app(app)
+        
         db.create_all()
     
         a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day', location='San Diego')
@@ -153,7 +153,3 @@ def initUsers():
 
 # pur user objects in list for convenience
 activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
-
-print("Test 1, make a dictionary")
-json_string = json.dumps([activity.__dict__ for activity in activities]) 
-print(json_string)
