@@ -13,18 +13,6 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     note = db.Column(db.Text, unique=False, nullable=False)
     image = db.Column(db.String, unique=False)
-
-   # CRUD create, adds a new record to the Notes table
-    # returns the object added or None in case of an error
-    def create(self):
-        try:
-            # creates a Notes object from Notes(db.Model) class, passes initializers
-            db.session.add(self)  # add prepares to persist person object to Notes table
-            db.session.commit()  # SqlAlchemy "unit of work pattern" requires a manual commit
-            return self
-        except IntegrityError:
-            db.session.remove()
-            return None
         
     # CRUD read, returns dictionary representation of Notes object
     # returns dictionary
@@ -108,6 +96,34 @@ class Activity:
     @location.setter
     def location(self, location):
         self._location = location
+        
+    # output content using str(object) in human readable form, uses getter
+    # output content using json dumps, this is ready for API response
+    def __str__(self):
+        return json.dumps(self.read())
+    
+    # CRUD create/add a new record to the table
+    # returns self or None on error
+    def create(self):
+        try:
+            # creates a person object from User(db.Model) class, passes initializers
+            db.session.add(self)  # add prepares to persist person object to Users table
+            db.session.commit()  # SqlAlchemy "unit of work pattern" requires a manual commit
+            return self
+        except IntegrityError:
+            db.session.remove()
+            return None
+        
+    # CRUD read converts self to dictionary
+    # returns dictionary
+    def read(self):
+        return {
+            "name": self.name,
+            "hobby": self.hobby,
+            "price": self.price,
+            "duration": self.duration,
+            "location": self.location
+        }
     
     # output content using str(object) in human readable form, uses getter
     def __str__(self):
