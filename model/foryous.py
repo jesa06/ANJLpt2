@@ -6,6 +6,61 @@ from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
 import json
 
+class Post(db.Model):
+    __tablename__ = 'posts'
+
+    # Define the Notes schema
+    id = db.Column(db.Integer, primary_key=True)
+    note = db.Column(db.Text, unique=False, nullable=False)
+    image = db.Column(db.String, unique=False)
+
+   # CRUD create, adds a new record to the Notes table
+    # returns the object added or None in case of an error
+    def create(self):
+        try:
+            # creates a Notes object from Notes(db.Model) class, passes initializers
+            db.session.add(self)  # add prepares to persist person object to Notes table
+            db.session.commit()  # SqlAlchemy "unit of work pattern" requires a manual commit
+            return self
+        except IntegrityError:
+            db.session.remove()
+            return None
+        
+    # CRUD read, returns dictionary representation of Notes object
+    # returns dictionary
+    def read(self):
+        # encode image
+        path = app.config['UPLOAD_FOLDER']
+        file = os.path.join(path, self.image)
+        file_text = open(file, 'rb')
+        file_read = file_text.read()
+        file_encode = base64.encodebytes(file_read)
+        
+        return {
+            "name": self.name,
+            "note": self.note,
+            "image": self.image,
+            "base64": str(file_encode)
+        }
+
+# Define the User class to manage actions in the 'users' table
+# -- Object Relational Mapping (ORM) is the key concept of SQLAlchemy
+# -- a.) db.Model is like an inner layer of the onion in ORM
+# -- b.) User represents data we want to store, something that is built on db.Model
+# -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
+class User(db.Model):
+    __tablename__ = 'users'  # table name is plural, class name is singular
+
+    # Define the User schema with "vars" from object
+    id = db.Column(db.Integer, primary_key=True)
+    _name = db.Column(db.String(255), unique=False, nullable=False)
+    _hobby = db.Column(db.String(255), unique=True, nullable=False)
+    _price = db.Column(db.String(255), unique=False, nullable=False)
+    _duration = db.Column(db.String(225), unique=False, nullable=False)
+
+    # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
+    posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
+
 class Activity:
     def __init__(self, name, hobby, price, duration, location=''):
         self._name = name
