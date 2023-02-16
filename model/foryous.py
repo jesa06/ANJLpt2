@@ -6,71 +6,154 @@ from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
 import json
 
-class Activity:
-    def __init__(activity, name, hobby, price, duration):
-        activity._name = name
-        activity._hobby = hobby
-        activity._price = price
-        activity._duration = duration
+class Post(db.Model):
+    __tablename__ = 'posts'
+
+    # Define the Notes schema
+    id = db.Column(db.Integer, primary_key=True)
+    note = db.Column(db.Text, unique=False, nullable=False)
+    image = db.Column(db.String, unique=False)
         
-@property 
-def activity(activity):
-    return activity._name
+    # CRUD read, returns dictionary representation of Notes object
+    # returns dictionary
+    def read(self):
+        # encode image
+        path = app.config['UPLOAD_FOLDER']
+        file = os.path.join(path, self.image)
+        file_text = open(file, 'rb')
+        file_read = file_text.read()
+        file_encode = base64.encodebytes(file_read)
+        
+        return {
+            "name": self.name,
+            "note": self.note,
+            "image": self.image,
+            "base64": str(file_encode)
+        }
 
-@activity.setter
-def activity(activity, name):
-    activity._name = name 
-    
-@property
-def hobby(activity):
-    return activity._hobby
+# Define the User class to manage actions in the 'users' table
+# -- Object Relational Mapping (ORM) is the key concept of SQLAlchemy
+# -- a.) db.Model is like an inner layer of the onion in ORM
+# -- b.) User represents data we want to store, something that is built on db.Model
+# -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
+class User(db.Model):
+    __tablename__ = 'users'  # table name is plural, class name is singular
 
-@hobby.setter
-def hobby(activity, hobby):
-    activity._hobby = hobby
-    
-@property
-def price(activity):
-    return activity._price
+    # Define the User schema with "vars" from object
+    id = db.Column(db.Integer, primary_key=True)
+    _name = db.Column(db.String(255), unique=False, nullable=False)
+    _hobby = db.Column(db.String(255), unique=True, nullable=False)
+    _price = db.Column(db.String(255), unique=False, nullable=False)
+    _duration = db.Column(db.String(225), unique=False, nullable=False)
 
-@price.setter
-def price(activity, price):
-    activity._price = price
-    
-@property
-def duration(activity):
-    return activity._duration
+    # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
+    posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
-@duration.setter
-def duration(activity, duration):
-    activity._duration = duration
-    
-# output content using str(object) in human readable form, uses getter
-    def __str__(activity):
-        return f'name: "{activity.name}", hobby: "{activity.hobby}", price: "{activity.price}", duration: "{activity.duration}"'
-    
-# output command to recreate the object, uses attribute directly
-    def __repr__(activity):
-        return f'Activity(name={activity._name}, hobby={activity._hobby}, price={activity._price}, duration={activity._duration})'
+class Activity:
+    def __init__(self, name, hobby, price, duration, location=''):
+        self._name = name
+        self._hobby = hobby
+        self._price = price
+        self._duration = duration
+        self._location = location
+        
+    @property 
+    def activity(self):
+        return self._name
 
-if __name__ == "__main__":
+    @activity.setter
+    def activity(self, name):
+        self._name = name 
     
-    #define activity objevts
-    a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day')
-    a2 = Activity(name='Balboa Park', hobby='', price='', duration='')
-    a3 = Activity(name='Del Mar Beach', hobby='', price='', duration='')
-    a4 = Activity(name='La Jolla Beach', hobby='', price='', duration='')
-    a5 = Activity(name='Hotel Del', hobby='', price='', duration='')
-    a6 = Activity(name='', hobby='', price='', duration='')
-    a7 = Activity(name='', hobby='', price='', duration='')
-    a9 = Activity(name='', hobby='', price='', duration='')
-    a10 = Activity(name='', hobby='', price='', duration='')
-    a11 = Activity(name='', hobby='', price='', duration='')
-    a12 = Activity(name='', hobby='', price='', duration='')
-    a13 = Activity(name='', hobby='', price='', duration='')
+    @property
+    def hobby(self):
+        return self._hobby
+
+    @hobby.setter
+    def hobby(self, hobby):
+        self._hobby = hobby
     
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, price):
+        self._price = price
+    
+    @property
+    def duration(self):
+        return self._duration
+
+    @duration.setter
+    def duration(self, duration):
+        self._duration = duration
+
+    @property
+    def location(self):
+        return self._location
+
+    @location.setter
+    def location(self, location):
+        self._location = location
+        
+    # output content using str(object) in human readable form, uses getter
+    # output content using json dumps, this is ready for API response
+    def __str__(self):
+        return json.dumps(self.read())
+    
+    # CRUD create/add a new record to the table
+    # returns self or None on error
+    def create(self):
+        try:
+            # creates a person object from User(db.Model) class, passes initializers
+            db.session.add(self)  # add prepares to persist person object to Users table
+            db.session.commit()  # SqlAlchemy "unit of work pattern" requires a manual commit
+            return self
+        except IntegrityError:
+            db.session.remove()
+            return None
+        
+    # CRUD read converts self to dictionary
+    # returns dictionary
+    def read(self):
+        return {
+            "name": self.name,
+            "hobby": self.hobby,
+            "price": self.price,
+            "duration": self.duration,
+            "location": self.location
+        }
+    
+    # output content using str(object) in human readable form, uses getter
+    def __str__(self):
+        return f'name: "{self._name}", hobby: "{self._hobby}", price: "{self._price}", duration: "{self._duration}", location: "{self._location}"'
+    
+    # output command to recreate the object, uses attribute directly
+    def __repr__(self):
+        return f'Activity(name={self._name}, hobby={self._hobby}, price={self._price}, duration={self._duration}, location={self._location})'
+
+def initUsers():
+    with app.app_context():
+        """Create database and tables"""
+        db.init_app(app)
+        db.create_all()
+    
+        a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day', location='San Diego')
+        a2 = Activity(name='Balboa Park', hobby='', price='', duration='', location='San Diego')
+        a3 = Activity(name='Del Mar Beach', hobby='', price='', duration='', location='Del Mar')
+        a4 = Activity(name='La Jolla Beach', hobby='', price='', duration='', location='La Jolla')
+        a5 = Activity(name='Hotel Del', hobby='', price='', duration='', location='Coronado')
+        a6 = Activity(name='', hobby='', price='', duration='', location='')
+        a7 = Activity(name='', hobby='', price='', duration='', location='')
+        a8 = Activity(name='', hobby='', price='', duration='', location='')
+        a9 = Activity(name='', hobby='', price='', duration='', location='')
+        a10 = Activity(name='', hobby='', price='', duration='', location='')
+        a11 = Activity(name='', hobby='', price='', duration='', location='')
 
 # pur user objects in list for convenience
 activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
 
-print(str(activity))
+print("Test 1, make a dictionary")
+json_string = json.dumps([activity.__dict__ for activity in activities]) 
+print(json_string)
