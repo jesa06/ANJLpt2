@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from sqlalchemy.exc import IntegrityError
 
-from models import Activity, db
+from model import Activity, db
 
 activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
 api = Api(activity_api)
