@@ -6,20 +6,94 @@ import json
 
 from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
+from werkzeug.security import generate_password_hash, check_password_hash
 
+#from flask import Blueprint, request, jsonify
+#from flask_restful import Api, Resource # used for REST API building
+#from datetime import datetime
+
+
+# blueprint, which is registered to app in main.py
+#user_api = Blueprint('user_api', __name__,
+                   #url_prefix='/api/users')
+
+# API docs https://flask-restful.readthedocs.io/en/latest/api.html#id1
+#api = Api(user_api)
+#class UserAPI:        
+    #class _Create(Resource):
+        #def post(self):
+            #''' Read data for json body '''
+            #body = request.get_json()
+            
+            #''' Avoid garbage in, error checking '''
+            # validate name
+            #name = body.get('name')
+            #if name is None or len(name) < 2:
+                #return {'message': f'name is missing, or is less than 2 characters'}, 210
+            # validate airline
+            #airline = body.get('airline')
+            #if airline is None or len(airline) < 2:
+                #return {'message': f'airline is missing, or is less than 2 characters'}, 210
+            # validate hotel
+            #hotel = body.get('hotel')
+            #if hotel is None or len(hotel) < 2:
+                #return {'message': f'hotel is missing, or is less than 2 characters'}, 210
+            # validate dob
+            #duration = body.get('duration')
+            #if duration is None or len(duration) < 2:
+            #    return {'message': f'duration is missing, or is less than 2 characters'}, 210
+            # look for password and dob
+            #password = body.get('password')
+            #dob = body.get('dob')
+
+           # ''' #1: Key code block, setup USER OBJECT '''
+           # uo = User(name=name, 
+           #           airline=airline,
+           #           hotel=hotel,
+           #           duration=duration)
+            
+          #  ''' Additional garbage error checking '''
+            # set password if provided
+            #if password is not None:
+                #uo.set_password(password)
+            # convert to date type
+            #if dob is not None:
+                #try:
+                    #uo.dob = datetime.strptime(dob, '%m-%d-%Y').date()
+                #except:
+                    #return {'message': f'Date of birth format error {dob}, must be mm-dd-yyyy'}, 210
+            
+            #''' #2: Key Code block to add user to database '''
+            # create user in database
+            #user = uo.create()
+            # success returns json of user
+            #if user:
+               #return jsonify(user.read())
+            # failure returns error
+            #return {'message': f'Processed {name}, either a format error or User ID {airline} is duplicate'}, 210
+
+    #class _Read(Resource):
+       # def get(self):
+       ##     users = User.query.all()    # read/extract all users from database
+       #     json_ready = [user.read() for user in users]  # prepare output in json
+        #    return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
+
+    # building RESTapi endpoint
+ #   api.add_resource(_Create, '/create')
+  #  api.add_resource(_Read, '/')
 
 ''' Tutorial: https://www.sqlalchemy.org/library.html#tutorials, try to get into Python shell and follow along '''
 
 # Define the Post class to manage actions in 'posts' table,  with a relationship to 'users' table
-class Post(db.Model):
-    __tablename__ = 'posts'
+class Put(db.Model):
+    __tablename__ = 'put'
 
     # Define the Notes schema
     id = db.Column(db.Integer, primary_key=True)
     note = db.Column(db.Text, unique=False, nullable=False)
     image = db.Column(db.String, unique=False)
     # Define a relationship in Notes Schema to userID who originates the note, many-to-one (many notes to one user)
-    userID = db.Column(db.Integer, db.ForeignKey('users.id'))
+    userID = db.Column(db.Integer, db.ForeignKey('seaworld.id'))
 
     # Constructor of a Notes object, initializes of instance variables within object
     def __init__(self, id, note, image):
@@ -68,26 +142,22 @@ class Post(db.Model):
 # -- a.) db.Model is like an inner layer of the onion in ORM
 # -- b.) User represents data we want to store, something that is built on db.Model
 # -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
-class User(db.Model):
-    __tablename__ = 'users'  # table name is plural, class name is singular
+class Seaworld(db.Model):
+    __tablename__ = 'seaworld'  # table name is plural, class name is singular
 
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), unique=False, nullable=False)
-    _uid = db.Column(db.String(255), unique=True, nullable=False)
-    _activity = db.Column(db.String(255), unique=False, nullable=False)
-    _rating = db.Column(db.String(225), unique=False, nullable=False)
+    _rating = db.Column(db.String(255), unique=False, nullable=False)
     _review = db.Column(db.String(255), unique=False, nullable=False)
-    _recommend = db.Column(db.String(255), unique=False, nullable=False)
+    _recommend = db.Column(db.Integer, unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
-    posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
+    put = db.relationship("Put", cascade='all, delete', backref='users', lazy=True)
 
     # constructor of a User object, initializes the instance variables within object (self)
-    def __init__(self, name, uid, activity="seaworld", rating="five", review="super good", recommend="yes"):
+    def __init__(self, name, rating, review="super good", recommend='yes'):
         self._name = name    # variables with self prefix become part of the object, 
-        self._uid = uid
-        self._activity = activity
         self._rating = rating
         self._review = review
         self._recommend = recommend
@@ -102,15 +172,7 @@ class User(db.Model):
     def name(self, name):
         self._name = name
     
-    @property
-    def activity(self):
-        return self._activity
-    
-    # a setter function, allows name to be updated after initial object creation
-    @activity.setter
-    def activity(self, activity):
-        self._activity = activity
-    
+    # a getter method, extracts email from object
     @property
     def rating(self):
         return self._rating
@@ -119,39 +181,39 @@ class User(db.Model):
     @rating.setter
     def rating(self, rating):
         self._rating = rating
-
-    # a getter method, extracts email from object
-    @property
-    def uid(self):
-        return self._uid
-    
-    # a setter function, allows name to be updated after initial object creation
-    @uid.setter
-    def uid(self, uid):
-        self._uid = uid
         
-    # check if uid parameter matches user id in object, return boolean
-    def is_uid(self, uid):
-        return self._uid == uid
+    # check if airline parameter matches user id in object, return boolean
+    def is_rating(self, rating):
+        return self._rating == rating
     
     @property
     def review(self):
-        return self._review
-
-    @review.setter
-    def review(self, review):
-        self._review = review
+        return self._review[0:10] + "..." # because of security only show 1st characters
     
+    # update password, this is conventional setter
+    #def set_password(self, password):
+     #   """Create a hashed password."""
+      #  self._password = generate_password_hash(password, method='sha256')
+
+    # check password parameter versus stored/encrypted password
+    #def is_password(self, password):
+     #   """Check against hashed password."""
+      #  result = check_password_hash(self._password, password)
+       # return result  
+    
+    @review.setter
+    def photel(self, review):
+        self._review = review
     # dob property is returned as string, to avoid unfriendly outcomes
+
     @property
     def recommend(self):
         return self._recommend
 
     @recommend.setter
     def recommend(self, recommend):
-        self._recommend = recommend
-    
-    
+        self._recommend = recommend 
+
     # output content using str(object) in human readable form, uses getter
     # output content using json dumps, this is ready for API response
     def __str__(self):
@@ -175,29 +237,22 @@ class User(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "uid": self.uid,
-            "activity": self.activity,
             "rating": self.rating,
             "review": self.review,
             "recommend": self.recommend,
+            #"posts": [post.read() for post in self.posts]
         }
-
-
 
     # CRUD update: updates user name, password, phone
     # returns self
-    def update(self, name="", uid="", activity="", rating="", review="", recommend=""):
+    def update(self, name="", rating="", review="", recommend=""):
         """only updates values with length"""
         if len(name) > 0:
             self.name = name
-        if len(uid) > 0:
-            self.uid = uid
-        if len(activity) > 0:
-            self.activity = activity
         if len(rating) > 0:
             self.rating = rating
         if len(review) > 0:
-            self.review = review
+            self._review = review
         if len(recommend) > 0:
             self.recommend = recommend
         db.session.commit()
@@ -214,30 +269,30 @@ class User(db.Model):
 """Database Creation and Testing """
 
 # Builds working data for testing
-def initUsers():
+def initSeaworld():
     with app.app_context():
         """Create database and tables"""
         db.init_app(app)
         db.create_all()
         """Tester data for table"""
-        u1 = User(name='Joselyn Anda', uid='jesa06', activity='seaworld', rating='five', review='super good', recommend='yes')
-        u2 = User(name='Lina Awad', uid='linaawad1', activity='seaworld', rating='two', review='not super good', recommend='no')
-        u3 = User(name='Naja Fonseca', uid='najaAFonseca', activity='seaworld', rating='one', review='not good', recommend='no')
-        u4 = User(name='Amitha Sanka', uid='amitha-sanka', activity='seaworld', rating='three', review='okay good', recommend='yes')
+        s1 = Seaworld(name='Thomas Edison', rating='five', review='good', recommend='yes')
+        s2 = Seaworld(name='Nicholas Tesla', rating='five', review='good', recommend='yes')
+        s3 = Seaworld(name='Alexander Graham Bell', rating='five', review='good', recommend='yes')
+        s4 = Seaworld(name='Eli Whitney',  rating='five', review='good', recommend='yes')
+        s5 = Seaworld(name='John Mortensen', rating='five', review='good', recommend='yes')
 
-        users = [u1, u2, u3, u4]
+        seaworld = [s1, s2, s3, s4, s5]
 
         """Builds sample user/note(s) data"""
-        for user in users:
+        for seaworld in seaworld:
             try:
                 '''add a few 1 to 4 notes per user'''
                 for num in range(randrange(1, 4)):
-                    note = "#### " + user.name + " note " + str(num) + ". \n Generated by test data."
-                    user.posts.append(Post(id=user.id, note=note, image='ncs_logo.png'))
+                    note = "#### " + seaworld.name + " note " + str(num) + ". \n Generated by test data."
+                    seaworld.put.append(Put(id=seaworld.id, note=note, image='ncs_logo.png'))
                 '''add user/post data to table'''
-                user.create()
+                seaworld.create()
             except IntegrityError:
                 '''fails with bad or duplicate data'''
                 db.session.remove()
-                print(f"Records exist, duplicate email, or error: {user.uid}")
-            
+                print(f"Records exist, duplicate email, or error: {seaworld.uid}")

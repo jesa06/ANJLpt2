@@ -1,4 +1,4 @@
-import threading
+# import threading
 
 # import "packages" from flask
 from flask import render_template  # import render_template from "public" flask libraries
@@ -7,11 +7,13 @@ from flask import render_template  # import render_template from "public" flask 
 from __init__ import app, db  # Definitions initialization
 from model.jokes import initJokes
 from model.users import initUsers
+from model.seaworld import initSeaworld
 
 # setup APIs
 from api.covid import covid_api # Blueprint import api definition
 from api.joke import joke_api # Blueprint import api definition
 from api.user import user_api # Blueprint import api definition
+from api.seaworld import seaworld_api
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
@@ -20,6 +22,7 @@ from projects.projects import app_projects # Blueprint directory import projects
 app.register_blueprint(joke_api) # register api routes
 app.register_blueprint(covid_api) # register api routes
 app.register_blueprint(user_api) # register api routes
+app.register_blueprint(seaworld_api)
 app.register_blueprint(app_projects) # register app pages
 
 @app.errorhandler(404)  # catch for URL not found
@@ -40,10 +43,11 @@ def activate_job():
     db.init_app(app)
     initJokes()
     initUsers()
+    initSeaworld()
 
 # this runs the application on the development server
 if __name__ == "__main__":
     # change name for testing
     from flask_cors import CORS
     cors = CORS(app)
-    app.run(debug=True, host="0.0.0.0", port="8731")
+    app.run(debug=True, host="0.0.0.0", port="8212")
