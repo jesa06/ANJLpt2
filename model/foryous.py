@@ -62,20 +62,23 @@ class Activity:
     def __repr__(self):
         return f'Activity(name={self._name}, hobby={self._hobby}, price={self._price}, duration={self._duration}, location={self._location})'
 
-if __name__ == "__main__":
+def initUsers():
+    with app.app_context():
+        """Create database and tables"""
+        db.init_app(app)
+        db.create_all()
     
-    #define activity objects
-    a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day', location='San Diego')
-    a2 = Activity(name='Balboa Park', hobby='', price='', duration='', location='San Diego')
-    a3 = Activity(name='Del Mar Beach', hobby='', price='', duration='', location='Del Mar')
-    a4 = Activity(name='La Jolla Beach', hobby='', price='', duration='', location='La Jolla')
-    a5 = Activity(name='Hotel Del', hobby='', price='', duration='', location='Coronado')
-    a6 = Activity(name='', hobby='', price='', duration='', location='')
-    a7 = Activity(name='', hobby='', price='', duration='', location='')
-    a8 = Activity(name='', hobby='', price='', duration='', location='')
-    a9 = Activity(name='', hobby='', price='', duration='', location='')
-    a10 = Activity(name='', hobby='', price='', duration='', location='')
-    a11 = Activity(name='', hobby='', price='', duration='', location='')
+        a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day', location='San Diego')
+        a2 = Activity(name='Balboa Park', hobby='', price='', duration='', location='San Diego')
+        a3 = Activity(name='Del Mar Beach', hobby='', price='', duration='', location='Del Mar')
+        a4 = Activity(name='La Jolla Beach', hobby='', price='', duration='', location='La Jolla')
+        a5 = Activity(name='Hotel Del', hobby='', price='', duration='', location='Coronado')
+        a6 = Activity(name='', hobby='', price='', duration='', location='')
+        a7 = Activity(name='', hobby='', price='', duration='', location='')
+        a8 = Activity(name='', hobby='', price='', duration='', location='')
+        a9 = Activity(name='', hobby='', price='', duration='', location='')
+        a10 = Activity(name='', hobby='', price='', duration='', location='')
+        a11 = Activity(name='', hobby='', price='', duration='', location='')
 
 # pur user objects in list for convenience
 activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
