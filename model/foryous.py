@@ -133,7 +133,7 @@ class Activity:
     def __repr__(self):
         return f'Activity(name={self._name}, hobby={self._hobby}, price={self._price}, duration={self._duration}, location={self._location})'
 
-def initUsers():
+def initActivities():
     with app.app_context():
         """Create database and tables"""
         
