@@ -6,30 +6,30 @@ from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
 import json
 
-class Post(db.Model):
-    __tablename__ = 'post'
+#class Post(db.Model):
+#   __tablename__ = 'post'
 
     # Define the Notes schema
 
-    note = db.Column(db.Text, unique=False, nullable=False)
-    image = db.Column(db.String, unique=False)
+#    note = db.Column(db.Text, unique=False, nullable=False)
+#    image = db.Column(db.String, unique=False)
         
     # CRUD read, returns dictionary representation of Notes object
     # returns dictionary
-    def read(self):
-        # encode image
-        path = app.config['UPLOAD_FOLDER']
-        file = os.path.join(path, self.image)
-        file_text = open(file, 'rb')
-        file_read = file_text.read()
-        file_encode = base64.encodebytes(file_read)
+#    def read(self):
+#        # encode image
+#        path = app.config['UPLOAD_FOLDER']
+#        file = os.path.join(path, self.image)
+#        file_text = open(file, 'rb')
+#        file_read = file_text.read()
+#        file_encode = base64.encodebytes(file_read)
         
-        return {
-            "name": self.name,
-            "note": self.note,
-            "image": self.image,
-            "base64": str(file_encode)
-        }
+#        return {
+#           "name": self.name,
+#            "note": self.note,
+#            "image": self.image,
+#            "base64": str(file_encode)
+#        }
 
 # Define the User class to manage actions in the 'users' table
 # -- Object Relational Mapping (ORM) is the key concept of SQLAlchemy
