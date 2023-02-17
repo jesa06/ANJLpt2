@@ -10,7 +10,7 @@ api = Api(activity_api)
 
 class ActivityApi:
     class _Create(Resource):
-        def post(self):
+        def pull(self):
             ''' Read data from json body '''
             body = request.get_json()
 
