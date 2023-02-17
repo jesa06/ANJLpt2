@@ -93,7 +93,7 @@ class Put(db.Model):
     note = db.Column(db.Text, unique=False, nullable=False)
     image = db.Column(db.String, unique=False)
     # Define a relationship in Notes Schema to userID who originates the note, many-to-one (many notes to one user)
-    userID = db.Column(db.Integer, db.ForeignKey('seaworld.id'))
+    userID = db.Column(db.Integer, db.ForeignKey('yelp.id'))
 
     # Constructor of a Notes object, initializes of instance variables within object
     def __init__(self, id, note, image):
@@ -142,25 +142,25 @@ class Put(db.Model):
 # -- a.) db.Model is like an inner layer of the onion in ORM
 # -- b.) User represents data we want to store, something that is built on db.Model
 # -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
-class Seaworld(db.Model):
-    __tablename__ = 'seaworld'  # table name is plural, class name is singular
+class Yelp(db.Model):
+    __tablename__ = 'yelp'  # table name is plural, class name is singular
 
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), unique=False, nullable=False)
     _rating = db.Column(db.String(255), unique=False, nullable=False)
     _review = db.Column(db.String(255), unique=False, nullable=False)
-    _recommend = db.Column(db.Integer, unique=False, nullable=False)
+    _activity = db.Column(db.Integer, unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     put = db.relationship("Put", cascade='all, delete', backref='users', lazy=True)
 
     # constructor of a User object, initializes the instance variables within object (self)
-    def __init__(self, name, rating, review="super good", recommend='yes'):
+    def __init__(self, name, rating, review="super good", activity='seaworld'):
         self._name = name    # variables with self prefix become part of the object, 
         self._rating = rating
         self._review = review
-        self._recommend = recommend
+        self.activity = activity
 
     # a name getter method, extracts name from object
     @property
@@ -207,12 +207,12 @@ class Seaworld(db.Model):
     # dob property is returned as string, to avoid unfriendly outcomes
 
     @property
-    def recommend(self):
-        return self._recommend
+    def activity(self):
+        return self._activity
 
-    @recommend.setter
-    def recommend(self, recommend):
-        self._recommend = recommend 
+    @activity.setter
+    def activity(self, activity):
+        self._activity = activity
 
     # output content using str(object) in human readable form, uses getter
     # output content using json dumps, this is ready for API response
@@ -239,13 +239,13 @@ class Seaworld(db.Model):
             "name": self.name,
             "rating": self.rating,
             "review": self.review,
-            "recommend": self.recommend,
+            "activity": self.activity,
             #"posts": [post.read() for post in self.posts]
         }
 
     # CRUD update: updates user name, password, phone
     # returns self
-    def update(self, name="", rating="", review="", recommend=""):
+    def update(self, name="", rating="", review="", activity=""):
         """only updates values with length"""
         if len(name) > 0:
             self.name = name
@@ -253,8 +253,8 @@ class Seaworld(db.Model):
             self.rating = rating
         if len(review) > 0:
             self._review = review
-        if len(recommend) > 0:
-            self.recommend = recommend
+        if len(activity) > 0:
+            self.activity = activity
         db.session.commit()
         return self
 
@@ -269,30 +269,30 @@ class Seaworld(db.Model):
 """Database Creation and Testing """
 
 # Builds working data for testing
-def initSeaworld():
+def initYelp():
     with app.app_context():
         """Create database and tables"""
         db.init_app(app)
         db.create_all()
         """Tester data for table"""
-        s1 = Seaworld(name='Thomas Edison', rating='five', review='good', recommend='yes')
-        s2 = Seaworld(name='Nicholas Tesla', rating='five', review='good', recommend='yes')
-        s3 = Seaworld(name='Alexander Graham Bell', rating='five', review='good', recommend='yes')
-        s4 = Seaworld(name='Eli Whitney',  rating='five', review='good', recommend='yes')
-        s5 = Seaworld(name='John Mortensen', rating='five', review='good', recommend='yes')
+        y1 = Yelp(name='Thomas Edison', rating='five', review='good', activity='yes')
+        y2 = Yelp(name='Nicholas Tesla', rating='five', review='good', activity='yes')
+        y3 = Yelp(name='Alexander Graham Bell', rating='five', review='good', activity='yes')
+        y4 = Yelp(name='Eli Whitney',  rating='five', review='good', activity='yes')
+        y5 = Yelp(name='John Mortensen', rating='five', review='good', activity='yes')
 
-        seaworld = [s1, s2, s3, s4, s5]
+        yelp = [y1, y2, y3, y4, y5]
 
         """Builds sample user/note(s) data"""
-        for seaworld in seaworld:
+        for yelp in yelp:
             try:
                 '''add a few 1 to 4 notes per user'''
                 for num in range(randrange(1, 4)):
-                    note = "#### " + seaworld.name + " note " + str(num) + ". \n Generated by test data."
-                    seaworld.put.append(Put(id=seaworld.id, note=note, image='ncs_logo.png'))
+                    note = "#### " + yelp.name + " note " + str(num) + ". \n Generated by test data."
+                    yelp.put.append(Put(id=yelp.id, note=note, image='ncs_logo.png'))
                 '''add user/post data to table'''
-                seaworld.create()
+                yelp.create()
             except IntegrityError:
                 '''fails with bad or duplicate data'''
                 db.session.remove()
-                print(f"Records exist, duplicate email, or error: {seaworld.uid}")
+                print(f"Records exist, duplicate email, or error: {yelp.uid}")
