@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from sqlalchemy.exc import IntegrityError
 
+from model.activity import Activity
+
 
 activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
 api = Api(activity_api)
@@ -32,15 +34,6 @@ class ActivityApi:
 
             ''' Key code block, setup ACTIVITY OBJECT '''
             ao = Activity(name=name, hobby=hobby, price=price, duration=duration, location=location)
-
-            ''' Add activity to database '''
-            db.session.add(ao)
-            try:
-                db.session.commit()
-                return jsonify(ao.to_dict()), 201
-            except IntegrityError:
-                db.session.rollback()
-                return {'message': f'Activity {name} already exists'}, 409
 
     class _Read(Resource):
         def get(self):
