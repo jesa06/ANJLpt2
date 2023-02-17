@@ -43,7 +43,7 @@ def activate_job():
     db.init_app(app)
     initUsers()
     initYelp()
-    initActivities()
+    initActivities()    
 
 # this runs the application on the development server
 if __name__ == "__main__":
