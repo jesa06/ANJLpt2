@@ -4,8 +4,6 @@ from sqlalchemy.exc import IntegrityError
 
 from model.activity import Activity
 
-
-
 activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
 api = Api(activity_api)
 
