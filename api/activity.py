@@ -40,6 +40,20 @@ class ActivityApi:
             activities = Activity.query.all()
             json_ready = [activity.to_dict() for activity in activities]
             return jsonify(json_ready)
+        
+    class _Security(Resource):
+
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Find activity '''
+            activity = Activity.query.filter_by().first()
+            if activity is None:
+                return {'message': f"Invalid activity"}, 400
+            
+            ''' authenticated user ''' 
+            return jsonify(activity.read())
 
     api.add_resource(_Create, '/create')
     api.add_resource(_Read, '/')
