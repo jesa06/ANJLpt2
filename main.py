@@ -7,7 +7,12 @@ from flask import render_template  # import render_template from "public" flask 
 from __init__ import app, db  # Definitions initialization
 from model.jokes import initJokes
 from model.users import initUsers
+<<<<<<< HEAD
 from model.yelp import initYelp
+=======
+from model.seaworld import initSeaworld
+from model.activity import initActivities
+>>>>>>> e322f9e33ba8efe54767373e6ca1c75ccb3ddcaa
 
 # setup APIs
 from api.covid import covid_api # Blueprint import api definition
