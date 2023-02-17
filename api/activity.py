@@ -37,7 +37,7 @@ class ActivityApi:
 
     class _Read(Resource):
         def get(self):
-            activities = Activity.query.all()
+            activities = db.session.query(Activity).query.all()
             json_ready = [activity.to_dict() for activity in activities]
             return jsonify(json_ready)
         
