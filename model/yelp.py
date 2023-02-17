@@ -275,11 +275,11 @@ def initYelp():
         db.init_app(app)
         db.create_all()
         """Tester data for table"""
-        y1 = Yelp(name='Thomas Edison', rating='five', review='good', activity='yes')
-        y2 = Yelp(name='Nicholas Tesla', rating='five', review='good', activity='yes')
-        y3 = Yelp(name='Alexander Graham Bell', rating='five', review='good', activity='yes')
-        y4 = Yelp(name='Eli Whitney',  rating='five', review='good', activity='yes')
-        y5 = Yelp(name='John Mortensen', rating='five', review='good', activity='yes')
+        y1 = Yelp(name='Thomas Edison', rating='five', review='good', activity='seaworld')
+        y2 = Yelp(name='Nicholas Tesla', rating='five', review='good', activity='del mar')
+        y3 = Yelp(name='Alexander Graham Bell', rating='five', review='good', activity='petco park')
+        y4 = Yelp(name='Eli Whitney',  rating='five', review='good', activity='seaworld')
+        y5 = Yelp(name='John Mortensen', rating='five', review='good', activity='del mar')
 
         yelp = [y1, y2, y3, y4, y5]
 
