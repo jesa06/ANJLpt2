@@ -28,14 +28,14 @@ class YelpAPI:
             # look for password and dob
             rating = body.get('rating')
             review = body.get('review')
-            recommend = body.get('recommend')
+            activity = body.get('activity')
 
             ''' #1: Key code block, setup USER OBJECT '''
             uo = Yelp(name=name, 
                       uid=uid)
             uo.rating = rating
             uo.review = review
-            uo.recommend = recommend
+            uo.activity = activity
 
             ''' Additional garbage error checking '''
             # set password if provided
@@ -56,7 +56,7 @@ class YelpAPI:
 
     class _Read(Resource):
         def get(self):
-            yelp = Yelpd.query.all()    # read/extract all users from database
+            yelp = Yelp.query.all()    # read/extract all users from database
             json_ready = [yelp.read() for yelp in yelp]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
     
