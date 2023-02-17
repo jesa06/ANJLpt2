@@ -8,7 +8,6 @@ from __init__ import app, db  # Definitions initialization
 from model.jokes import initJokes
 from model.users import initUsers
 from model.yelp import initYelp
-from model.seaworld import initSeaworld
 from model.activity import initActivities
 
 # setup APIs
