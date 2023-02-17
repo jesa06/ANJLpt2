@@ -8,7 +8,7 @@ from __init__ import app, db  # Definitions initialization
 from model.jokes import initJokes
 from model.users import initUsers
 from model.yelp import initYelp
-from model.activity import initActivities
+#from model.activity import initActivities
 
 # setup APIs
 from api.covid import covid_api # Blueprint import api definition
