@@ -6,8 +6,8 @@ from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
 import json
 
-class Pull(db.Model):
-    __tablename__ = 'pull'
+class Post(db.Model):
+    __tablename__ = 'post'
 
     # Define the Notes schema
 
@@ -47,7 +47,7 @@ class Activity(db.Model):
     _duration = db.Column(db.String(225), unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
-    pull = db.relationship("Pull", cascade='all, delete', backref='users', lazy=True)
+    post = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
 class Activity:
     def __init__(self, name, hobby, price, duration, location=''):
