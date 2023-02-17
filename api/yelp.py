@@ -2,15 +2,15 @@ import json
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource # used for REST API building
 
-from model.seaworld import Seaworld
+from model.yelp import Yelp
 
-seaworld_api = Blueprint('seaworld_api', __name__,
-                   url_prefix='/api/seaworld')
+yelp_api = Blueprint('yelp_api', __name__,
+                   url_prefix='/api/yelp')
 
 # API docs https://flask-restful.readthedocs.io/en/latest/api.html
-api = Api(seaworld_api)
+api = Api(yelp_api)
 
-class SeaworldAPI:        
+class YelpAPI:        
     class _Create(Resource):
         def put(self):
             ''' Read data for json body '''
@@ -31,7 +31,7 @@ class SeaworldAPI:
             recommend = body.get('recommend')
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = Seaworld(name=name, 
+            uo = Yelp(name=name, 
                       uid=uid)
             uo.rating = rating
             uo.review = review
@@ -47,17 +47,17 @@ class SeaworldAPI:
             
             ''' #2: Key Code block to add user to database '''
             # create user in database
-            seaworld = uo.create()
+            yelp = uo.create()
             # success returns json of user
-            if seaworld:
-                return jsonify(seaworld.read())
+            if yelp:
+                return jsonify(yelp.read())
             # failure returns error
             return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 400
 
     class _Read(Resource):
         def get(self):
-            seaworld = Seaworld.query.all()    # read/extract all users from database
-            json_ready = [seaworld.read() for seaworld in seaworld]  # prepare output in json
+            yelp = Yelpd.query.all()    # read/extract all users from database
+            json_ready = [yelp.read() for yelp in yelp]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
     
     class _Security(Resource):
@@ -74,12 +74,12 @@ class SeaworldAPI:
 
             
             ''' Find user '''
-            seaworld = Seaworld.query.filter_by(_uid=uid).first()
-            if seaworld is None or not seaworld.is_password(password):
+            yelp = Yelp.query.filter_by(_uid=uid).first()
+            if yelp is None or not yelp.is_password(password):
                 return {'message': f"Invalid user id or password"}, 400
             
             ''' authenticated user ''' 
-            return jsonify(seaworld.read())
+            return jsonify(yelp.read())
 
             
 

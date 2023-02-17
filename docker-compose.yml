@@ -4,7 +4,7 @@ services:
                 image: flask_anjl2_v1
                 build: .
                 ports:
-                        - "8731:8212"
+                        - "8731:8731"
                 volumes:
                         - ./volumes:/volumes
                         - ./instance:/instance
