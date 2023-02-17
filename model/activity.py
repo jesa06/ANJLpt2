@@ -6,8 +6,8 @@ from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
 import json
 
-class Post(db.Model):
-    __tablename__ = 'posts'
+class Pull(db.Model):
+    __tablename__ = 'pull'
 
     # Define the Notes schema
 
@@ -36,7 +36,7 @@ class Post(db.Model):
 # -- a.) db.Model is like an inner layer of the onion in ORM
 # -- b.) User represents data we want to store, something that is built on db.Model
 # -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
-class User(db.Model):
+class Activity(db.Model):
     __tablename__ = 'users'  # table name is plural, class name is singular
 
     # Define the User schema with "vars" from object
@@ -47,7 +47,7 @@ class User(db.Model):
     _duration = db.Column(db.String(225), unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
-    posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
+    pull = db.relationship("Pull", cascade='all, delete', backref='users', lazy=True)
 
 class Activity:
     def __init__(self, name, hobby, price, duration, location=''):
@@ -151,5 +151,5 @@ def initActivities():
         a10 = Activity(name='', hobby='', price='', duration='', location='')
         a11 = Activity(name='', hobby='', price='', duration='', location='')
 
-# pur user objects in list for convenience
-activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
+        # pur user objects in list for convenience
+        activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11] 
