@@ -3,6 +3,9 @@ from flask_restful import Api, Resource
 from sqlalchemy.exc import IntegrityError
 
 from model.activity import Activity
+import sys
+sys.path.insert(0, './yolov5')
+
 
 
 activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
