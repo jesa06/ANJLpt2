@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from sqlalchemy.exc import IntegrityError
+from __init__ import app, db
 
 from model.activity import Activity, db
 
