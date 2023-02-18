@@ -47,9 +47,7 @@ class Activity(db.Model):
     _duration = db.Column(db.String(225), unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
-    post = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
-class Activity:
     def __init__(self, name, hobby, price, duration, location=''):
         self._name = name
         self._hobby = hobby
@@ -138,8 +136,9 @@ def initActivities():
         """Create database and tables"""
         
         db.create_all()
-    
+        db.init_app(app)
         a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day', location='San Diego')
+        a1.create()
         a2 = Activity(name='Balboa Park', hobby='', price='', duration='', location='San Diego')
         a3 = Activity(name='Del Mar Beach', hobby='', price='', duration='', location='Del Mar')
         a4 = Activity(name='La Jolla Beach', hobby='', price='', duration='', location='La Jolla')
