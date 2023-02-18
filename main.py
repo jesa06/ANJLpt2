@@ -40,9 +40,9 @@ def stub():
 
 @app.before_first_request
 def activate_job():
-    db.init_app(app)
-    initUsers()
-    initYelp()
+    # db.init_app(app)
+#     initUsers()
+#     initYelp()
     initActivities()    
 
 # this runs the application on the development server
