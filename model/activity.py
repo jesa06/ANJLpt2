@@ -155,8 +155,9 @@ def initActivities():
         a8.create()
         a9 = Activity(name='Luna Grill', hobby='food', price='$0-$50', duration='1-2 horus', location='San Diego')
         a9.create()
-        a10 = Activity(name='', hobby='', price='', duration='', location='')
+        a10 = Activity(name='University California of San Diego', hobby='college', price='free', duration='1-2 hours', location='La Jolla')
         a10.create()
 
         # pur user objects in list for convenience
         activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10] 
+        
