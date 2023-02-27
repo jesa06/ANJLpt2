@@ -36,6 +36,7 @@ import json
 # -- a.) db.Model is like an inner layer of the onion in ORM
 # -- b.) User represents data we want to store, something that is built on db.Model
 # -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
+
 class Activity(db.Model):
     __tablename__ = 'activity'  # table name is plural, class name is singular
 
