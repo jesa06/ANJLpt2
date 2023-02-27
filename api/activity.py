@@ -7,10 +7,6 @@ from model.activity import Activity
 activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
 api = Api(activity_api)
 
-app = flask(Activity)
-app.register_blueprint(activity_api)
-activity_api.init_app(app)
-
 class ActivityApi:
     class _Create(Resource):
         def post(self):
@@ -21,7 +17,7 @@ class ActivityApi:
             # validate name
             name = body.get('name')
             if not name or len(name) < 2:
-                return {'message': 'Name is missing, or is less than 2 characters'}, 400
+                return {'message': 'Activity name is missing, or is less than 2 characters'}, 400
 
             # validate hobby
             hobby = body.get('hobby')
