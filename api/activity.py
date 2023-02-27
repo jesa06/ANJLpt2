@@ -7,6 +7,10 @@ from model.activity import Activity
 activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
 api = Api(activity_api)
 
+app = Flask(Activity)
+app.register_blueprint(activity_api)
+activity_api.init_app(app)
+
 class ActivityApi:
     class _Create(Resource):
         def post(self):
