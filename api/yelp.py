@@ -12,7 +12,7 @@ api = Api(yelp_api)
 
 class YelpAPI:        
     class _Create(Resource):
-        def put(self):
+        def post(self):
             ''' Read data for json body '''
             body = request.get_json()
             
@@ -22,25 +22,25 @@ class YelpAPI:
             if name is None or len(name) < 2:
                 return {'message': f'Name is missing, or is less than 2 characters'}, 400
             # validate uid
-            uid = body.get('uid')
-            if uid is None or len(uid) < 2:
-                return {'message': f'User ID is missing, or is less than 2 characters'}, 400
+            # uid = body.get('uid')
+            # if uid is None or len(uid) < 2:
+            #     return {'message': f'User ID is missing, or is less than 2 characters'}, 400
             # look for password and dob
             rating = body.get('rating')
             review = body.get('review')
             activity = body.get('activity')
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = Yelp(name=name, 
-                      uid=uid)
+            uo = Yelp(name=name) 
+                    #   uid=uid)
             uo.rating = rating
             uo.review = review
             uo.activity = activity
 
             ''' Additional garbage error checking '''
-            # set password if provided
-          #   if password is not None:
-             #   uo.password = password
+             #set password if provided
+             #if password is not None:
+              #  uo.password = password
     
             # convert to date type
         
@@ -52,7 +52,7 @@ class YelpAPI:
             if yelp:
                 return jsonify(yelp.read())
             # failure returns error
-            return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 400
+            return {'message': f'Processed {name}, either a format error or Review {review} is duplicate'}, 400
 
     class _Read(Resource):
         def get(self):
@@ -62,24 +62,24 @@ class YelpAPI:
     
     class _Security(Resource):
 
-        def put(self):
+        def post(self):
             ''' Read data for json body '''
             body = request.get_json()
             
-            ''' Get Data '''
-            uid = body.get('uid')
-            if uid is None or len(uid) < 2:
-                return {'message': f'User ID is missing, or is less than 2 characters'}, 400
-            password = body.get('password')
+            # ''' Get Data '''
+            # uid = body.get('uid')
+            # if uid is None or len(uid) < 2:
+            #     return {'message': f'User ID is missing, or is less than 2 characters'}, 400
+            # password = body.get('password')
 
             
-            ''' Find user '''
-            yelp = Yelp.query.filter_by(_uid=uid).first()
-            if yelp is None or not yelp.is_password(password):
-                return {'message': f"Invalid user id or password"}, 400
+            # ''' Find user '''
+            # yelp = Yelp.query.filter_by(_uid=uid).first()
+            # if yelp is None or not yelp.is_password(password):
+            #     return {'message': f"Invalid user id or password"}, 400
             
-            ''' authenticated user ''' 
-            return jsonify(yelp.read())
+            # ''' authenticated user ''' 
+            # return jsonify(yelp.read())
 
             
 

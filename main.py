@@ -7,23 +7,21 @@ from flask import render_template  # import render_template from "public" flask 
 from __init__ import app, db  # Definitions initialization
 from model.users import initUsers
 from model.yelp import initYelp
-from model.activity import initActivities
+#from model.activity import initActivities
 
 # setup APIs
-from api.covid import covid_api # Blueprint import api definition
 from api.user import user_api # Blueprint import api definition
 from api.yelp import yelp_api
-from api.activity import activity_api
+#from api.activity import activity_api
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
 
 # register URIs
-app.register_blueprint(covid_api) # register api routes
 app.register_blueprint(user_api) # register api routes
 app.register_blueprint(yelp_api)
 app.register_blueprint(app_projects) # register app pages
-app.register_blueprint(activity_api) # register api routes
+#app.register_blueprint(activity_api) # register api routes
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
@@ -43,7 +41,7 @@ def activate_job():
     db.init_app(app)
     initUsers()
     initYelp()
-    initActivities()    
+  #  initActivities()    
 
 # this runs the application on the development server
 if __name__ == "__main__":
