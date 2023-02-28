@@ -38,17 +38,10 @@ def stub():
 
 @app.before_first_request
 def activate_job():
-<<<<<<< HEAD
     db.init_app(app)
     initUsers()
     initYelp()
   #  initActivities()    
-=======
-    # db.init_app(app)
-#     initUsers()
-#     initYelp()
-    initActivities()    
->>>>>>> 730c4d240b1a0f2943893aae71f8c2b52dde6705
 
 # this runs the application on the development server
 if __name__ == "__main__":
