@@ -6,11 +6,17 @@
 # from sqlalchemy.exc import IntegrityError
 # import json
 
+<<<<<<< HEAD
 # class Pull(db.Model):
 #     __tablename__ = 'pull'
+=======
+#class Post(db.Model):
+#   __tablename__ = 'post'
+>>>>>>> 730c4d240b1a0f2943893aae71f8c2b52dde6705
 
 #     # Define the Notes schema
 
+<<<<<<< HEAD
 #     note = db.Column(db.Text, unique=False, nullable=False)
 #     image = db.Column(db.String, unique=False)
         
@@ -56,6 +62,52 @@
 #         self._price = price
 #         self._duration = duration
 #         self._location = location
+=======
+#    note = db.Column(db.Text, unique=False, nullable=False)
+#    image = db.Column(db.String, unique=False)
+        
+    # CRUD read, returns dictionary representation of Notes object
+    # returns dictionary
+#    def read(self):
+#        # encode image
+#        path = app.config['UPLOAD_FOLDER']
+#        file = os.path.join(path, self.image)
+#        file_text = open(file, 'rb')
+#        file_read = file_text.read()
+#        file_encode = base64.encodebytes(file_read)
+        
+#        return {
+#           "name": self.name,
+#            "note": self.note,
+#            "image": self.image,
+#            "base64": str(file_encode)
+#        }
+
+# Define the User class to manage actions in the 'users' table
+# -- Object Relational Mapping (ORM) is the key concept of SQLAlchemy
+# -- a.) db.Model is like an inner layer of the onion in ORM
+# -- b.) User represents data we want to store, something that is built on db.Model
+# -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
+
+class Activity(db.Model):
+    __tablename__ = 'activity'  # table name is plural, class name is singular
+
+    # Define the User schema with "vars" from object
+    id = db.Column(db.Integer, primary_key=True)
+    _name = db.Column(db.String(255), unique=False, nullable=False)
+    _hobby = db.Column(db.String(255), unique=True, nullable=False)
+    _price = db.Column(db.String(255), unique=False, nullable=False)
+    _duration = db.Column(db.String(225), unique=False, nullable=False)
+
+    # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
+
+    def __init__(self, name, hobby, price, duration, location=''):
+        self._name = name
+        self._hobby = hobby
+        self._price = price
+        self._duration = duration
+        self._location = location
+>>>>>>> 730c4d240b1a0f2943893aae71f8c2b52dde6705
         
 #     @property 
 #     def activity(self):
@@ -137,6 +189,7 @@
 #     with app.app_context():
 #         """Create database and tables"""
         
+<<<<<<< HEAD
 #         db.create_all()
     
 #         a1 = Activity(name='SeaWorld', hobby='park', price= "$109-$200", duration= 'all-day', location='San Diego')
@@ -153,3 +206,31 @@
 
 #         # pur user objects in list for convenience
 #         activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11] 
+=======
+        db.create_all()
+        db.init_app(app)
+        a1 = Activity(name='SeaWorld', hobby='park', price= "$100-$200", duration= 'all-day', location='San Diego')
+        a1.create()
+        a2 = Activity(name='Balboa Park', hobby='park', price='free', duration='all-day', location='San Diego')
+        a2.create()
+        a3 = Activity(name='Del Mar Beach', hobby='beach', price='free', duration='all-day', location='Del Mar')
+        a3.create()
+        a4 = Activity(name='La Jolla Beach', hobby='beach', price='free', duration='all-day', location='La Jolla')
+        a4.create()
+        a5 = Activity(name='North County Mall', hobby='mall', price='free', duration='all-day', location='Escondido')
+        a5.create()
+        a6 = Activity(name='Belmont Park', hobby='park', price='$100-$200', duration='all-day', location='')
+        a6.create()
+        a7 = Activity(name='Teaspoon', hobby='food', price='$0-$50', duration='0-1 hour', location='San Diego')
+        a7.create()
+        a8 = Activity(name='San Diego State University', hobby='college', price='free', duration='1-2 hours', location='San Diego')
+        a8.create()
+        a9 = Activity(name='Luna Grill', hobby='food', price='$0-$50', duration='1-2 horus', location='San Diego')
+        a9.create()
+        a10 = Activity(name='University California of San Diego', hobby='college', price='free', duration='1-2 hours', location='La Jolla')
+        a10.create()
+
+        # pur user objects in list for convenience
+        activities = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10] 
+        
+>>>>>>> 730c4d240b1a0f2943893aae71f8c2b52dde6705

@@ -4,6 +4,7 @@
 
 # from model.activity import Activity
 
+<<<<<<< HEAD
 
 # activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
 # api = Api(activity_api)
@@ -19,6 +20,22 @@
 #             name = body.get('name')
 #             if not name or len(name) < 2:
 #                 return {'message': 'Name is missing, or is less than 2 characters'}, 400
+=======
+activity_api = Blueprint('activity_api', __name__, url_prefix='/api/activities')
+api = Api(activity_api)
+
+class ActivityApi:
+    class _Create(Resource):
+        def post(self):
+            ''' Read data from json body '''
+            body = request.get_json()
+
+            ''' Error checking '''
+            # validate name
+            name = body.get('name')
+            if not name or len(name) < 2:
+                return {'message': 'Activity name is missing, or is less than 2 characters'}, 400
+>>>>>>> 730c4d240b1a0f2943893aae71f8c2b52dde6705
 
 #             # validate hobby
 #             hobby = body.get('hobby')
@@ -35,11 +52,19 @@
 #             ''' Key code block, setup ACTIVITY OBJECT '''
 #             ao = Activity(name=name, hobby=hobby, price=price, duration=duration, location=location)
 
+<<<<<<< HEAD
 #     class _Read(Resource):
 #         def get(self):
 #             activities = db.session.query(Activity).query.all()
 #             json_ready = [activity.to_dict() for activity in activities]
 #             return jsonify(json_ready)
+=======
+    class _Read(Resource):
+        def get(self):
+            activities = Activity.query.all()
+            json_ready = [activity.to_dict() for activity in activities]
+            return jsonify(json_ready)
+>>>>>>> 730c4d240b1a0f2943893aae71f8c2b52dde6705
         
 #     class _Security(Resource):
 
