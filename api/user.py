@@ -1,75 +1,73 @@
 import json
 from flask import Blueprint, request, jsonify
-from flask_restful import Api, Resource # used for REST API building
+from flask_restful import Api, Resource
 from datetime import datetime
-
 from model.users import User
+from __init__ import db
+import sqlite3
 
 user_api = Blueprint('user_api', __name__,
-                   url_prefix='/api/users')
+                     url_prefix='/api/users')
 
-# API docs https://flask-restful.readthedocs.io/en/latest/api.html
 api = Api(user_api)
 
-class UserAPI:        
+
+class UserAPI:
+    def __init__(self):
+        pass
+        
     class _Create(Resource):
         def post(self):
-            ''' Read data for json body '''
             body = request.get_json()
             
-            ''' Avoid garbage in, error checking '''
-            # validate name
             name = body.get('name')
             if name is None or len(name) < 2:
                 return {'message': f'Name is missing, or is less than 2 characters'}, 400
-            # validate uid
+            
             uid = body.get('uid')
             if uid is None or len(uid) < 2:
                 return {'message': f'User ID is missing, or is less than 2 characters'}, 400
-            # look for password and dob
+            
             password = body.get('password')
             dob = body.get('dob')
             phone = body.get('phone')
             email = body.get('email')
-
-            ''' #1: Key code block, setup USER OBJECT '''
+            age = body.get('age')
+            
             uo = User(name=name, 
-                      uid=uid)
-            uo.phone = phone
-            uo.email = email
-            uo.password = password
-            uo.dob = dob
-
-            ''' Additional garbage error checking '''
-            # set password if provided
-          #   if password is not None:
-             #   uo.password = password
-    
-            # convert to date type
-        
+                      uid=uid,
+                      phone=phone,
+                      email=email,
+                      password=password,
+                      dob=dob,
+                      age=age)
+            
             if dob is not None:
                 try:
                     uo.dob = datetime.strptime(dob, '%Y-%m-%d').date()
                 except:
-                    return {'message': f'Date of birth format error {dob}, must be mm-dd-yyyy'}, 400
+                    return {'message': f'Date of birth format error {dob}, must be yyyy-mm-dd'}, 400
             
-            ''' #2: Key Code block to add user to database '''
-            # create user in database
             user = uo.create()
-            # success returns json of user
             if user:
                 return jsonify(user.read())
-            # failure returns error
             return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 400
 
     class _Read(Resource):
         def get(self):
-            users = User.query.all()    # read/extract all users from database
-            json_ready = [user.read() for user in users]  # prepare output in json
-            return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
+            users = User.query.all()
+            json_ready = [user.read() for user in users]
+            return jsonify(json_ready)
     
-    class _Security(Resource):
+   # class _Login(Resource):  
+    #    @staticmethod
+     #       if user == None:
+      #          return {'message': f'{uid} account not found'}
+       #     if (user.is_password(password)):
+        #        return True
+         #   return {'message': f'{uid} incorrect password'}, 400
 
+    class _Security(Resource):
         def post(self):
             ''' Read data for json body '''
             body = request.get_json()
@@ -89,10 +87,11 @@ class UserAPI:
             ''' authenticated user ''' 
             return jsonify(user.read())
 
-            
+        
 
     # building RESTapi endpoint
     api.add_resource(_Create, '/create')
     api.add_resource(_Read, '/')
+    #api.add_resource(_Login, '/login')
     api.add_resource(_Security, '/authenticate')
     

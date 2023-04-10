@@ -4,7 +4,7 @@
 from flask import render_template  # import render_template from "public" flask libraries
 
 # import "packages" from "this" project
-from __init__ import app, db  # Definitions initialization
+from __init__ import app, db # Definitions initialization
 from model.users import initUsers
 from model.yelp import initYelp
 #from model.activity import initActivities
@@ -13,6 +13,7 @@ from model.yelp import initYelp
 from api.user import user_api # Blueprint import api definition
 from api.yelp import yelp_api
 #from api.activity import activity_api
+
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition

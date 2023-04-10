@@ -74,12 +74,13 @@ class User(db.Model):
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), unique=False, nullable=False)
-    _uid = db.Column(db.String(255), unique=True, nullable=False)
+    _uid = db.Column(db.String(255), db.ForeignKey('users.uid'), unique=True, nullable=False)
     _phone = db.Column(db.String(255), unique=False, nullable=False)
     _email = db.Column(db.String(225), unique=False, nullable=False)
     _password = db.Column(db.String(255), unique=False, nullable=False)
     _dob = db.Column(db.Date)
     _age = db.Column(db.Integer, unique=False, nullable=True)
+
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
@@ -234,13 +235,12 @@ def calculate_age(born):
 def initUsers():
     with app.app_context():
         """Create database and tables"""
-        db.init_app(app)
         db.create_all()
         """Tester data for table"""
-        u1 = User(name='Joselyn Anda', uid='jesa06', phone='8586197777', email='joseanda@gmail.com', password='123ellyna4', dob=date(2006, 1, 15), age=calculate_age(date(2006, 1, 15)))
-        u2 = User(name='Lina Awad', uid='linaawad1', phone='8886665555', email='linaaaa@gmail.com', password='thomas82', dob=date(2006, 10, 3), age=calculate_age(date(2006, 10, 28)))
-        u3 = User(name='Naja Fonseca', uid='najaAFonseca', phone='8587360021', email='najaAF@gmail.com', password='Purpleflower0', dob=date(2007, 10, 5), age=calculate_age(date(2007, 9, 20)))
-        u4 = User(name='Amitha Sanka', uid='amitha-sanka', phone='8584320098', email='amithaaaaas@gmail.com', password='tobyyWhite3', dob=date(1959, 10, 21), age=calculate_age(date(2005, 10, 1)))
+        u1 = User(name='Joselyn Anda2', uid='jesa06', phone='8586197777', email='joseanda@gmail.com', password='123ellyna4', dob=date(2006, 1, 15), age=calculate_age(date(2006, 1, 15)))
+        u2 = User(name='Lina Awad2', uid='linaawad1', phone='8886665555', email='linaaaa@gmail.com', password='thomas82', dob=date(2006, 10, 3), age=calculate_age(date(2006, 10, 28)))
+        u3 = User(name='Naja Fonseca2', uid='najaAFonseca', phone='8587360021', email='najaAF@gmail.com', password='Purpleflower0', dob=date(2007, 10, 5), age=calculate_age(date(2007, 9, 20)))
+        u4 = User(name='Amitha Sanka2', uid='amitha-sanka', phone='8584320098', email='amithaaaaas@gmail.com', password='tobyyWhite3', dob=date(1959, 10, 21), age=calculate_age(date(2005, 10, 1)))
 
         users = [u1, u2, u3, u4]
 
