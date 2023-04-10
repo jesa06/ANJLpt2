@@ -198,7 +198,6 @@ class Yelp(db.Model):
 def initYelp():
     with app.app_context():
         """Create database and tables"""
-        db.init_app(app)
         db.create_all()
         """Tester data for table"""
         y1 = Yelp(name='Thomas Edison', rating='five', review='good', activity='seaworld')
