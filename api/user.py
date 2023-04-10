@@ -4,7 +4,6 @@ from flask_restful import Api, Resource
 from datetime import datetime
 from model.users import User
 from __init__ import db, app
-import sqlite3
 
 user_api = Blueprint('user_api', __name__,
                      url_prefix='/api/users')

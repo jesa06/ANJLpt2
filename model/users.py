@@ -74,7 +74,7 @@ class User(db.Model):
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), unique=False, nullable=False)
-    _uid = db.Column(db.String(255), db.ForeignKey('users.uid'), unique=True, nullable=False)
+    _uid = db.Column(db.String(255), unique=True, nullable=False)
     _phone = db.Column(db.String(255), unique=False, nullable=False)
     _email = db.Column(db.String(225), unique=False, nullable=False)
     _password = db.Column(db.String(255), unique=False, nullable=False)
