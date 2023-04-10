@@ -12,7 +12,7 @@ These object can be used throughout project.
 # Setup of key Flask object (app)
 app = Flask(__name__)
 # Setup SQLAlchemy object and properties for the database (db)
-dbURI = 'sqlite:///instance/sqlite.db'
+dbURI = 'sqlite:///instance/volumes/sqlite.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
 app.config['SECRET_KEY'] = 'SECRET_KEY'
@@ -22,4 +22,4 @@ Migrate(app, db)
 # Images storage
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # maximum size of uploaded content
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']  # supported file types
-app.config['UPLOAD_FOLDER'] = '///instance'  # location of user uploaded content
+app.config['UPLOAD_FOLDER'] = '///instance/volumes'  # location of user uploaded content
