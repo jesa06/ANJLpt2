@@ -6,6 +6,7 @@ import json
 
 from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
+from werkzeug.security import check_password_hash
 
 
 ''' Tutorial: https://www.sqlalchemy.org/library.html#tutorials, try to get into Python shell and follow along '''
@@ -165,6 +166,11 @@ class User(db.Model):
         self._age = age
     
     
+    def is_password(self, password):
+      #  """Check against hashed password."""
+        result = check_password_hash(self._password, password)
+        return result
+
     # output content using str(object) in human readable form, uses getter
     # output content using json dumps, this is ready for API response
     def __str__(self):
