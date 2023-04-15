@@ -2,11 +2,11 @@ import json
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from datetime import datetime
-from model.users import User
-from __init__ import db, app
+
 from werkzeug.security import check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-
+from model.users import User
+from __init__ import db, app
 
 user_api = Blueprint('user_api', __name__,
                      url_prefix='/api/users')
