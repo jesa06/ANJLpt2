@@ -165,12 +165,24 @@ class User(db.Model):
     def age(self, age):
         self._age = age
     
+    def find_by_uid(uid):
+        with app.app_context():
+            user = User.query.filter_by(_uid=uid).first()
+        return user
     
     def is_password(self, password):
       #  """Check against hashed password."""
         result = check_password_hash(self._password, password)
         return result
 
+    def check_credentials(uid, password):
+        # query email and return user record
+        user = user.find_by_uid(uid)
+        if user == None:
+            return False
+        if (user.is_password(password)):
+            return True
+        return False
     # output content using str(object) in human readable form, uses getter
     # output content using json dumps, this is ready for API response
     def __str__(self):

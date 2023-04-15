@@ -4,26 +4,14 @@ from flask_restful import Api, Resource
 from datetime import datetime
 from model.users import User
 from __init__ import db, app
+from werkzeug.security import check_password_hash
+from flask_sqlalchemy import SQLAlchemy
 
 
 user_api = Blueprint('user_api', __name__,
                      url_prefix='/api/users')
 
 api = Api(user_api)
-
-#def find_by_uid(uid):
-#    with app.app_context():
-#        user = User.query.filter_by(_uid=uid).first()
-#    return user
-
-#def check_credentials(uid, password):
-    # query email and return user record
-#    user = find_by_uid(uid)
-#    if user == None:
-#        return False
-#    if (user.is_password(password)):
-#        return True
-#    return False
 
 class UserAPI:
     def __init__(self):
@@ -82,14 +70,15 @@ class UserAPI:
             ''' Get Data '''
             uid = body.get('uid')
             if uid is None or len(uid) < 2:
-                return {'message': 'User ID is missing, or is less than 2 characters'}, 400
+                return {'message': f'User ID is missing, or is less than 2 characters'}, 400
             password = body.get('password')
 
             
             ''' Find user '''
             user = User.query.filter_by(_uid=uid).first()
             if user is None or not user.is_password(password):
-                return {'message': 'Invalid user id or password'}, 400
+            #if user is None or not user.check_credentials(uid, password):
+                return {'message': f"Invalid user id or password"}, 400
             
 
             ''' authenticated user ''' 
@@ -100,5 +89,5 @@ class UserAPI:
     # building RESTapi endpoint
     api.add_resource(_Create, '/create')
     api.add_resource(_Read, '/')
-    api.add_resource(_Login, '/login')
+    api.add_resource(_Login, '/authenticate')
     
