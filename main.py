@@ -6,6 +6,7 @@ from flask import render_template  # import render_template from "public" flask 
 # import "packages" from "this" project
 from __init__ import app, db # Definitions initialization
 from model.users import initUsers
+#from model.users import initWeather
 #from model.yelp import initYelp
 #from model.activity import initActivities
 
@@ -37,13 +38,12 @@ def index():
 def stub():
     return render_template("stub.html")
 
-
-
 @app.before_first_request
 def activate_job():
     db.init_app(app)
     initUsers()
-    #initYelp()
+  #  initWeather()
+    #initYelp() 
   #  initActivities()    
 
 # this runs the application on the development server
