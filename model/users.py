@@ -63,7 +63,6 @@ class Post(db.Model):
             "base64": str(file_encode)
         }
 
-
 # Define the User class to manage actions in the 'users' table
 # -- Object Relational Mapping (ORM) is the key concept of SQLAlchemy
 # -- a.) db.Model is like an inner layer of the onion in ORM
@@ -85,7 +84,7 @@ class User(db.Model):
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
-
+    weather = db.relationship("Weather", cascade='all, delete', backref='users', lazy=True)
     # constructor of a User object, initializes the instance variables within object (self)
     def __init__(self, name, uid, phone="8588888888", email="seanyeung@gmail.com", password="123qwerty", dob=date.today(), age=17):
         self._name = name    # variables with self prefix become part of the object, 
@@ -165,24 +164,46 @@ class User(db.Model):
     def age(self, age):
         self._age = age
     
-    def find_by_uid(uid):
+    def find_by_uid(self, uid):
         with app.app_context():
             user = User.query.filter_by(_uid=uid).first()
         return user
-    
-    def is_password(self, password):
-      #  """Check against hashed password."""
-        result = check_password_hash(self._password, password)
-        return result
 
-    def check_credentials(uid, password):
+    #def is_password(self, password):
+    #     return self._password == password;        
+
+    def is_password(self, password):        
+        return (self._password, password)
+
+   # def is_password(self, password):
+    #    result = (self._password, password)
+     #   return result
+    # AI CODE
+    #def is_password(self, password):
+     #   return self.password == password
+
+    #def check_credentials(uid, password):
         # query email and return user record
-        user = user.find_by_uid(uid)
+     #   user = user.find_by_uid(uid)
+      #  if user == None:
+        #    return False 
+        #if (user.is_password(password)):
+         #   return True
+        #return False
+
+    def check_credentials(self, uid, password):
+        user = self.find_by_uid(uid)
         if user == None:
             return False
         if (user.is_password(password)):
             return True
         return False
+        # query email and return user record
+        #if self.uid == uid and self.is_password(password):
+         #   return True
+        #else:
+         #   return False
+
     # output content using str(object) in human readable form, uses getter
     # output content using json dumps, this is ready for API response
     def __str__(self):
@@ -276,3 +297,48 @@ def initUsers():
                 db.session.remove()
                 print(f"Records exist, duplicate email, or error: {user.uid}")
             
+
+class Weather(db.Model):
+    __tablename__ = 'weather'
+
+    id = db.Column(db.Integer, primary_key=True)
+    city = db.Column(db.Text, unique=False, nullable=False)
+    # Define a relationship in Notes Schema to userID who originates the note, many-to-one (many notes to one user)
+    uid = db.Column(db.Integer, db.ForeignKey('users.uid'))
+
+    def __init__(self, id, city, uid):
+        self.userID = id
+        self.city = city
+        self.uid = uid
+
+    def __str__(self):
+        return json.dumps(self.read())
+
+    def __repr__(self):
+        return "Weather(" + str(self.id) + "," + self.city + "," + str(self.uid) + ")"
+
+    def create(self):
+        try:
+            # creates a Weather object from Weather(db.Model) class, passes initializers
+            db.session.add(self)  # add prepares to persist person object to Weather table
+            db.session.commit()  # SqlAlchemy "unit of work pattern" requires a manual commit
+            return self
+        except IntegrityError:
+            db.session.remove()
+            return None
+
+    # CRUD read, returns dictionary representation of Weather object
+    # returns dictionary
+    def read(self):
+        return {
+            "id": self.id,
+            "uid": self.uid,
+            "city": self.city,
+        }
+
+    # CRUD delete: remove self
+    # None
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        return None
