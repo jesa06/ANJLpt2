@@ -304,7 +304,7 @@ class Weather(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     city = db.Column(db.Text, unique=False, nullable=False)
     # Define a relationship in Notes Schema to userID who originates the note, many-to-one (many notes to one user)
-    uid = db.Column(db.Integer, db.ForeignKey('users.uid'))
+    uid = db.Column(db.Integer, db.ForeignKey('users._uid'))
 
     def __init__(self, id, city, uid):
         self.userID = id
